@@ -1,0 +1,15 @@
+# Python environments & caches
+.venv/
+.mplconfig/
+__pycache__/
+*.pyc
+
+# Large media outputs & audio intermediates (MP4 uploaded separately to Google Drive)
+assets/audio/
+output/
+*.mp4
+*.wav
+*.mp3
+
+# Private prep notes
+SUBMISSION_GUIDE.md

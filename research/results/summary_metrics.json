@@ -1,0 +1,153 @@
+{
+  "dataset": {
+    "universe": "NIFTY 50 (^NSEI) + NSE Gold ETF (GOLDBEES.NS) + India VIX (^INDIAVIX)",
+    "warmup_start": "2018-07-01",
+    "oos_start": "2023-01-02",
+    "end_date": "2026-11-25",
+    "total_eval_days": 2069,
+    "is_days": 1109,
+    "oos_days": 960,
+    "one_way_cost_bps": 5.0
+  },
+  "in_sample": {
+    "buy_and_hold": {
+      "days": 1109,
+      "total_return_pct": 68.98,
+      "cagr_pct": 12.66,
+      "ann_vol_pct": 20.18,
+      "sharpe": 0.69,
+      "sortino": 0.58,
+      "max_drawdown_pct": -38.44,
+      "calmar": 0.33,
+      "profit_factor": 1.14,
+      "win_rate_pct": 54.37,
+      "t_stat": 1.45,
+      "p_value": 0.0732,
+      "ann_turnover": 0.0
+    },
+    "naive_crossover": {
+      "days": 1109,
+      "total_return_pct": 81.96,
+      "cagr_pct": 14.57,
+      "ann_vol_pct": 14.68,
+      "sharpe": 1.0,
+      "sortino": 1.0,
+      "max_drawdown_pct": -21.06,
+      "calmar": 0.69,
+      "profit_factor": 1.19,
+      "win_rate_pct": 54.37,
+      "t_stat": 2.1,
+      "p_value": 0.0181,
+      "ann_turnover": 4.77
+    },
+    "cross_asset_regime": {
+      "days": 1109,
+      "total_return_pct": 76.64,
+      "cagr_pct": 13.8,
+      "ann_vol_pct": 9.71,
+      "sharpe": 1.38,
+      "sortino": 1.48,
+      "max_drawdown_pct": -9.85,
+      "calmar": 1.4,
+      "profit_factor": 1.26,
+      "win_rate_pct": 53.56,
+      "t_stat": 2.9,
+      "p_value": 0.0019,
+      "ann_turnover": 10.04
+    }
+  },
+  "out_of_sample": {
+    "buy_and_hold": {
+      "days": 960,
+      "total_return_pct": 41.96,
+      "cagr_pct": 9.63,
+      "ann_vol_pct": 12.81,
+      "sharpe": 0.78,
+      "sortino": 0.74,
+      "max_drawdown_pct": -15.77,
+      "calmar": 0.61,
+      "profit_factor": 1.14,
+      "win_rate_pct": 53.39,
+      "t_stat": 1.53,
+      "p_value": 0.0636,
+      "ann_turnover": 0.0
+    },
+    "naive_crossover": {
+      "days": 960,
+      "total_return_pct": 19.01,
+      "cagr_pct": 4.67,
+      "ann_vol_pct": 10.21,
+      "sharpe": 0.5,
+      "sortino": 0.46,
+      "max_drawdown_pct": -12.97,
+      "calmar": 0.36,
+      "profit_factor": 1.09,
+      "win_rate_pct": 51.51,
+      "t_stat": 0.97,
+      "p_value": 0.1653,
+      "ann_turnover": 6.3
+    },
+    "cross_asset_regime": {
+      "days": 960,
+      "total_return_pct": 66.32,
+      "cagr_pct": 14.29,
+      "ann_vol_pct": 10.56,
+      "sharpe": 1.32,
+      "sortino": 1.35,
+      "max_drawdown_pct": -12.01,
+      "calmar": 1.19,
+      "profit_factor": 1.26,
+      "win_rate_pct": 56.56,
+      "t_stat": 2.57,
+      "p_value": 0.0051,
+      "ann_turnover": 9.49
+    }
+  },
+  "full_sample": {
+    "buy_and_hold": {
+      "days": 2069,
+      "total_return_pct": 139.89,
+      "cagr_pct": 11.25,
+      "ann_vol_pct": 17.15,
+      "sharpe": 0.71,
+      "sortino": 0.61,
+      "max_drawdown_pct": -38.44,
+      "calmar": 0.29,
+      "profit_factor": 1.14,
+      "win_rate_pct": 53.92,
+      "t_stat": 2.03,
+      "p_value": 0.0213,
+      "ann_turnover": 0.0
+    },
+    "naive_crossover": {
+      "days": 2069,
+      "total_return_pct": 116.55,
+      "cagr_pct": 9.87,
+      "ann_vol_pct": 12.8,
+      "sharpe": 0.8,
+      "sortino": 0.78,
+      "max_drawdown_pct": -21.06,
+      "calmar": 0.47,
+      "profit_factor": 1.15,
+      "win_rate_pct": 53.05,
+      "t_stat": 2.29,
+      "p_value": 0.0111,
+      "ann_turnover": 5.48
+    },
+    "cross_asset_regime": {
+      "days": 2069,
+      "total_return_pct": 193.79,
+      "cagr_pct": 14.03,
+      "ann_vol_pct": 10.11,
+      "sharpe": 1.35,
+      "sortino": 1.41,
+      "max_drawdown_pct": -12.01,
+      "calmar": 1.17,
+      "profit_factor": 1.26,
+      "win_rate_pct": 54.95,
+      "t_stat": 3.87,
+      "p_value": 0.0001,
+      "ann_turnover": 9.79
+    }
+  }
+}
