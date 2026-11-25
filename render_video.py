@@ -123,6 +123,37 @@ def alpha_col(col: tuple[int, int, int, int], a_mult: float) -> tuple[int, int, 
     return (col[0], col[1], col[2], int(col[3] * clamp01(a_mult)))
 
 
+def make_squircle_portrait(size: int, radius: int) -> Image.Image:
+    p = Image.open(PLATES / "sunil_portrait_studio.png").convert("RGBA")
+    p = p.resize((size, size), Image.Resampling.LANCZOS)
+    mask = Image.new("L", (size, size), 0)
+    md = ImageDraw.Draw(mask)
+    md.rounded_rectangle([0, 0, size - 1, size - 1], radius=radius, fill=255)
+    p.putalpha(mask)
+    return p
+
+
+def paste_portrait(
+    ov: Image.Image,
+    d: ImageDraw.ImageDraw,
+    portrait: Image.Image,
+    x: int,
+    y: int,
+    alpha_mult: float,
+    radius: int,
+    border_col: tuple[int, int, int, int],
+) -> None:
+    if alpha_mult <= 0.02:
+        return
+    sz = portrait.size[0]
+    p_mod = portrait.copy()
+    if alpha_mult < 0.999:
+        a_band = p_mod.getchannel("A").point(lambda v: int(v * clamp01(alpha_mult)))
+        p_mod.putalpha(a_band)
+    ov.paste(p_mod, (x, y), p_mod)
+    d.rounded_rectangle([x, y, x + sz, y + sz], radius=radius, outline=alpha_col(border_col, alpha_mult), width=2)
+
+
 def draw_header(draw: ImageDraw.ImageDraw, scene_idx: int, title: str, global_t: float, total_dur: float) -> None:
     # Top sleek bar
     draw.rectangle([0, 0, W, 72], fill=(5, 8, 17, 195))
@@ -279,16 +310,17 @@ def render_scene_01(t: float, dur: float, plates: dict) -> Image.Image:
     else:
         a = ease_out_cubic((t - 7.2) / 0.9)
         y_off = int((1.0 - a) * 28)
-        draw_rounded_card(d, (88, 170 + y_off, 1020, 860 + y_off), fill=(9, 15, 30, int(225 * a)), outline=alpha_col(BORDER_CYAN, a))
-        d.text((134, 215 + y_off), "CANDIDATE PROFILE", font=FONTS["kicker"], fill=alpha_col(CYAN, a))
-        d.text((134, 250 + y_off), "Sunil Parswal", font=FONTS["h1"], fill=alpha_col(TEXT_PRIMARY, a))
-        d.text((134, 342 + y_off), "IDD Civil Engineering  ·  IIT (BHU), Varanasi  ·  Class of 2027", font=FONTS["body"], fill=alpha_col(TEXT_SECONDARY, a))
-        d.line([(134, 396 + y_off), (970, 396 + y_off)], fill=alpha_col(BORDER_MUTED, a), width=2)
+        draw_rounded_card(d, (88, 170 + y_off, 1058, 860 + y_off), fill=(9, 15, 30, int(225 * a)), outline=alpha_col(BORDER_CYAN, a))
+        d.text((134, 212 + y_off), "CANDIDATE PROFILE", font=FONTS["kicker"], fill=alpha_col(CYAN, a))
+        d.text((134, 246 + y_off), "Sunil Parswal", font=FONTS["h1"], fill=alpha_col(TEXT_PRIMARY, a))
+        d.text((134, 332 + y_off), "IDD Civil Engineering  ·  IIT (BHU), Varanasi", font=FONTS["body"], fill=alpha_col(TEXT_SECONDARY, a))
+        d.text((134, 366 + y_off), "Class of 2027  ·  Khejroli, Jaipur", font=FONTS["body_sm"], fill=alpha_col(TEXT_MUTED, a))
+        paste_portrait(ov, d, plates["portrait_sm"], 832, 198 + y_off, a, radius=24, border_col=CYAN)
+        d.line([(134, 408 + y_off), (1012, 408 + y_off)], fill=alpha_col(BORDER_MUTED, a), width=2)
 
         # Animated KPI Tiles
         prog = ease_out_cubic((t - 8.5) / 3.0)
         rating_val = int(1872 * prog)
-        pct_val = 6.42
         kpis = [
             ("LEETCODE PEAK", f"{rating_val}", "Knight · Top 6.42% Globally", CYAN),
             ("BIWEEKLY CONTEST 190", f"Rank #{int(507 + (1 - prog) * 400)}", "Global Competitive Programming", EMERALD),
@@ -296,11 +328,11 @@ def render_scene_01(t: float, dur: float, plates: dict) -> Image.Image:
         ]
         for idx, (lbl, big, sub, col) in enumerate(kpis):
             ka = ease_out_cubic((t - (8.4 + idx * 1.4)) / 0.8)
-            ky = 425 + idx * 135 + y_off
-            draw_rounded_card(d, (134, ky, 974, ky + 112), fill=(15, 25, 48, int(235 * ka)), outline=alpha_col(col, 0.55 * ka), radius=14)
-            d.text((164, ky + 16), lbl, font=FONTS["kicker"], fill=alpha_col(col, ka))
-            d.text((164, ky + 44), big, font=FONTS["kpi_sm"], fill=alpha_col(TEXT_PRIMARY, ka))
-            d.text((435, ky + 52), sub, font=FONTS["body_sm"], fill=alpha_col(TEXT_SECONDARY, ka))
+            ky = 434 + idx * 132 + y_off
+            draw_rounded_card(d, (134, ky, 1012, ky + 110), fill=(15, 25, 48, int(235 * ka)), outline=alpha_col(col, 0.55 * ka), radius=14)
+            d.text((164, ky + 15), lbl, font=FONTS["kicker"], fill=alpha_col(col, ka))
+            d.text((164, ky + 43), big, font=FONTS["kpi_sm"], fill=alpha_col(TEXT_PRIMARY, ka))
+            d.text((435, ky + 51), sub, font=FONTS["body_sm"], fill=alpha_col(TEXT_SECONDARY, ka))
 
     return Image.alpha_composite(frame, ov)
 
@@ -647,14 +679,15 @@ def render_scene_06(t: float, dur: float, plates: dict) -> Image.Image:
                 d.text((rx0 + 66, by), b, font=FONTS["body"], fill=alpha_col(TEXT_PRIMARY, ra))
     else:
         ca = ease_out_cubic((t - 18.4) / 0.9)
-        draw_rounded_card(d, (160, 240, 1760, 810), fill=(8, 13, 26, int(218 * ca)), outline=alpha_col(BORDER_CYAN, 0.75 * ca), radius=24, width=2)
+        draw_rounded_card(d, (160, 240, 1760, 810), fill=(8, 13, 26, int(222 * ca)), outline=alpha_col(BORDER_CYAN, 0.75 * ca), radius=24, width=2)
         d.text((230, 305), "HOUSE OF EDTECH  ·  STAGE 1 SUBMISSION", font=FONTS["kicker"], fill=alpha_col(CYAN, ca))
         d.text((230, 355), "Sunil Parswal", font=FONTS["h1"], fill=alpha_col(TEXT_PRIMARY, ca))
         d.text((230, 445), "Applying for Junior Quantitative Research Analyst", font=FONTS["h3"], fill=alpha_col(EMERALD, ca))
-        d.line([(230, 515), (1680, 515)], fill=alpha_col(BORDER_MUTED, ca), width=2)
+        d.line([(230, 515), (1285, 515)], fill=alpha_col(BORDER_MUTED, ca), width=2)
         d.text((230, 555), "IIT (BHU) Varanasi  ·  IDD '27  ·  LeetCode Knight (1872)  ·  Fintech & ML Builder", font=FONTS["body"], fill=alpha_col(TEXT_SECONDARY, ca))
-        d.text((230, 625), "sunilparswal.work@gmail.com   ·   Full NSE Walk-Forward Python Research Repo Included", font=FONTS["mono_b"], fill=alpha_col(CYAN, ca))
+        d.text((230, 625), "sunilparswal.work@gmail.com   ·   GitHub: SuKhu-Jat/nse-cross-asset-regime-research", font=FONTS["mono_b"], fill=alpha_col(CYAN, ca))
         d.text((230, 705), "\"Ready to turn raw market noise into disciplined edge.\"", font=FONTS["h3"], fill=alpha_col(TEXT_PRIMARY, ca))
+        paste_portrait(ov, d, plates["portrait_lg"], 1345, 305, ca, radius=28, border_col=CYAN)
 
     return Image.alpha_composite(frame, ov)
 
@@ -671,6 +704,8 @@ def main() -> None:
         "network": load_plate("ai_pipeline_network.png"),
         "vol": load_plate("vol_surface_3d.png"),
         "horizon": load_plate("horizon_beam.jpg"),
+        "portrait_sm": make_squircle_portrait(188, radius=24),
+        "portrait_lg": make_squircle_portrait(350, radius=28),
     }
     bt = prepare_backtest_curves()
 

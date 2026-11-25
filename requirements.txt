@@ -3,5 +3,6 @@ pandas>=2.2.0
 matplotlib>=3.9.0
 scipy>=1.14.0
 pillow>=11.0.0
+opencv-python-headless>=4.10.0
 yfinance>=0.2.50
 edge-tts>=7.0.0
